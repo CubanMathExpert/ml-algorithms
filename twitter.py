@@ -22,6 +22,8 @@ dataFrame['stemmed_tweet'] = dataFrame['tweet'].apply(stem_text) # add column 's
 vectorizer = TfidfVectorizer(max_features=10000)
 x = vectorizer.fit_transform(dataFrame['stemmed_tweet'])
 
+print(x)
+
 
 
 
