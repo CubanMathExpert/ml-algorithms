@@ -5,6 +5,8 @@ import transformers as ppb
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.naive_bayes import GaussianNB
 from nltk.stem import PorterStemmer
 nltk.download('punkt')
 
@@ -21,6 +23,13 @@ dataFrame['stemmed_tweet'] = dataFrame['tweet'].apply(stem_text) # add column 's
 
 vectorizer = TfidfVectorizer(max_features=10000)
 x = vectorizer.fit_transform(dataFrame['stemmed_tweet'])
+encoder = LabelEncoder()
+y = encoder.fit_transform(dataFrame['subtask_a'])
+
+#train_test_split fait le le 25-75 split test et train data??
+# ensuite je passe au model .predict(les donnes ?)
+#x is the input and y the target values.
+
 
 
 
