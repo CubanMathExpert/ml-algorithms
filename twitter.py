@@ -52,10 +52,13 @@ X_train, X_test, y_train, y_test = train_test_split(X_dense, y, test_size=0.7, r
 
 # models
 
-# # naive bayes
-# model_nb = MultinomialNB()
-# y_pred_nb = model_nb.fit(X_train, y_train).predict(X_test)
-# print("Accuracy for Multinomial Naive Bayes: ", accuracy_score(y_test, y_pred_nb))
+# naive bayes
+model_mnb = MultinomialNB()
+model_gnb = GaussianNB()
+y_pred_mnb = model_mnb.fit(X_train, y_train).predict(X_test)
+y_pred_gnb = model_gnb.fit(X_train, y_train).predict(X_test)
+print("Accuracy for Multinomial Naive Bayes: ", accuracy_score(y_test, y_pred_mnb))
+print("Accuracy for Gaussian Naive Bayes: ", accuracy_score(y_test, y_pred_gnb))
 
 # # decision tree
 # model_dt = DecisionTreeClassifier()
@@ -75,10 +78,10 @@ X_train, X_test, y_train, y_test = train_test_split(X_dense, y, test_size=0.7, r
 # print("Accuracy for SVM linear: ", accuracy_score(y_test, y_pred_svm_lin))
 # print("Accuracy for SVM rbf: ", accuracy_score(y_test, y_pred_svm_rbf))
 
-# neural network
-model_mlp = MLPClassifier(activation='logistic', hidden_layer_sizes=(100, 50), max_iter=800, momentum=0.9, learning_rate_init=0.001, batch_size=300, random_state=0)
-y_pred_mlp = model_mlp.fit(X_train, y_train).predict(X_test)
-print("Accuracy for Multi Layer Perceptron: ", accuracy_score(y_test, y_pred_mlp))
+# # neural network
+# model_mlp = MLPClassifier(activation='logistic', hidden_layer_sizes=(100, 50), max_iter=800, momentum=0.9, learning_rate_init=0.001, batch_size=300, random_state=0)
+# y_pred_mlp = model_mlp.fit(X_train, y_train).predict(X_test)
+# print("Accuracy for Multi Layer Perceptron: ", accuracy_score(y_test, y_pred_mlp))
 
 
 
