@@ -8,6 +8,8 @@ from sklearn.dummy import DummyClassifier
 import torch
 import transformers as ppb
 
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 from transformers import BertTokenizer
 
 import warnings
@@ -17,6 +19,8 @@ warnings.filterwarnings('ignore')
 dataFrame = pd.read_csv("source/offenseval-training-v1.tsv", delimiter='\t')
 
 dataFrame = dataFrame[['tweet', 'subtask_a']]
+
+dataFrame = dataFrame[:500]
 
 model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-uncased')
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -43,7 +47,18 @@ batch_size = 40
 
 with torch.no_grad():
     for i in tqdm(range(0, input_ids.shape[0], batch_size)):
-        last_hiddden_states_for_batch = model(input_ids[i:i + batch_size], attention_mask=attention_mask[i:i + batch_size])
-        result.append(last_hiddden_states_for_batch)
+        last_hidden_states_for_batch = model(input_ids[i:i + batch_size], attention_mask=attention_mask[i:i + batch_size])
+        result.append(last_hidden_states_for_batch)
 
+last_hidden_states = torch.cat(list(map(lambda x : x.last_hidden_state, result)), dim=0)
+features = last_hidden_states[:,0,:].numpy()
+labels = dataFrame['subtask_a']
 
+train_features, test_features, train_labels, test_labels = train_test_split(features, labels)
+
+#print(train_features, train_labels)
+
+model_mnb = LogisticRegression()
+model_mnb.fit(train_features, train_labels)
+
+print(model_mnb.score(test_features,test_labels))

@@ -47,7 +47,7 @@ encoder = LabelEncoder()
 y = encoder.fit_transform(dataFrame['subtask_a'])
 
 # train / test splits
-X_train, X_test, y_train, y_test = train_test_split(X_dense, y, test_size=0.7, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X_dense, y, train_size=0.7, random_state=0)
 
 
 # models
