@@ -2,13 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import cross_val_score
-from sklearn.dummy import DummyClassifier
+from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 import torch
 import transformers as ppb
+from transformers import AdamW, get_linear_schedule_with_warmup
 
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from transformers import BertTokenizer
 
@@ -17,9 +15,7 @@ from tqdm import tqdm
 warnings.filterwarnings('ignore')
 
 dataFrame = pd.read_csv("source/offenseval-training-v1.tsv", delimiter='\t')
-
 dataFrame = dataFrame[['tweet', 'subtask_a']]
-
 dataFrame = dataFrame[:500]
 
 model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-uncased')
@@ -41,6 +37,7 @@ attention_mask = np.where(padded != 0, 1, 0)
 
 input_ids = torch.tensor(padded)
 attention_mask = torch.tensor(attention_mask)
+labels = torch.tensor(dataFrame['subtask_a'])
 
 result = []
 batch_size = 40
@@ -52,11 +49,11 @@ with torch.no_grad():
 
 last_hidden_states = torch.cat(list(map(lambda x : x.last_hidden_state, result)), dim=0)
 features = last_hidden_states[:,0,:].numpy()
-labels = dataFrame['subtask_a']
 
 train_features, test_features, train_labels, test_labels = train_test_split(features, labels)
 
-#print(train_features, train_labels)
+#convert to dataloader
+train_data = TensorDataset(train_features,)
 
 model_mnb = LogisticRegression()
 model_mnb.fit(train_features, train_labels)
